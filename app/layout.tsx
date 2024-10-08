@@ -2,6 +2,7 @@ import { Providers } from './Providers'
 import { ColorModeScript } from "@chakra-ui/react"
 import theme from "@/styles/theme"
 import { Metadata } from 'next'
+import Analytics from '@/components/Analytics'
 
 export const metadata: Metadata = {
   title: 'Proper Shopper',
@@ -17,7 +18,10 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-        <Providers>{children}</Providers>
+        <Providers>
+          <Analytics />
+          {children}
+        </Providers>
       </body>
     </html>
   )
