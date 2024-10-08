@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Proper Shopper
+
+Proper Shopper is a comprehensive shopping list management application built with Next.js, React, and Firebase. It allows users to create, manage, and share shopping lists while tracking their spending habits.
+
+## Features
+
+- User authentication
+- Create, edit, and delete shopping lists
+- Share lists with other users (editors and viewers)
+- Real-time updates using Firebase
+- Monthly and yearly spending tracking
+- Budget management
+- Spending trends visualization
+- Responsive design using Chakra UI
+
+## Technologies Used
+
+- Next.js
+- React
+- Firebase (Authentication and Firestore)
+- Chakra UI
+- Chart.js
+- TypeScript
+
+## Current Version
+
+The current version is v0.1.0-alpha. This is a pre-release version and may contain bugs or incomplete features.
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Set up your Firebase project and add the configuration to `firebase.ts`
+4. Run the development server:
+   ```
+   npm run dev
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Project Structure
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The main component of the application is the Dashboard. This component handles the main functionality of the application, including:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Fetching and displaying shopping lists
+- Managing user data and authentication
+- Handling list creation, deletion, and pinning
+- Displaying spending statistics and trends
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Key Features Explained
 
-## Learn More
+### User Authentication
 
-To learn more about Next.js, take a look at the following resources:
+The application uses Firebase Authentication for user management. Users can sign up, log in, and log out.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Shopping Lists
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Users can create, view, edit, and delete shopping lists. Lists can be shared with other users as editors or viewers.
 
-## Deploy on Vercel
+### Real-time Updates
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The application uses Firebase's real-time listeners to keep the data up-to-date across all connected clients.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Spending Tracking
+
+The Dashboard component calculates and displays monthly and yearly spending based on the items in the shopping lists.
+
+### Budget Management
+
+Users can set and update their monthly budget. The application provides visual feedback on spending relative to the budget.
+
+### Spending Trends
+
+A line chart displays the user's spending trends over the year, allowing for easy visualization of spending patterns.
