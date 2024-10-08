@@ -27,6 +27,7 @@ Proper Shopper is a comprehensive shopping list management application built wit
 The current version is v0.1.0-alpha. This is a pre-release version and may contain bugs or incomplete features.
 
 ## Getting Started
+You can visit the live site at [https://proper-shopper.vercel.app](https://proper-shopper.vercel.app). Alternatively, you can run the application locally by following these steps:
 
 1. Clone the repository
 2. Install dependencies:
