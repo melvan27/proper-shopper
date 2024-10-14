@@ -349,9 +349,9 @@ const Dashboard: React.FC = () => {
 
   const handlePinList = async (listId: string, pinned: boolean) => {
     try {
-      await updateDoc(doc(db, 'shoppingLists', listId), { pinned, updatedAt: serverTimestamp() })
+      await updateDoc(doc(db, 'shoppingLists', listId), { pinned })
       setLists(lists.map(list => 
-        list.id === listId ? { ...list, pinned, updatedAt: Timestamp.now() } : list
+        list.id === listId ? { ...list, pinned } : list
       ))
     } catch (error) {
       console.error('Error updating list pin status:', error)
