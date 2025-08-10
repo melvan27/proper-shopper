@@ -8,9 +8,6 @@ import {
   Checkbox,
   Text,
   IconButton,
-  InputGroup,
-  InputLeftAddon,
-  useNumberInput,
   Button,
   NumberInput,
   NumberInputField,
@@ -68,37 +65,20 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
   onPriceBlur,
   onAmountBlur,
 }) => {
-  const {
-    getInputProps: getAmountInputProps,
-    getIncrementButtonProps: getAmountIncrementProps,
-    getDecrementButtonProps: getAmountDecrementProps,
-  } = useNumberInput({
-    step: 1,
-    defaultValue: parseInt(amountInput) || 1,
-    min: 1,
-    precision: 0,
-    onChange: (valueString) => onAmountChange(valueString),
-  })
+  const amountValue = parseInt(amountInput) || 1
+  const priceValue = parseFloat(priceInput) || 0
+  const totalValue = (amountValue * priceValue).toFixed(2)
 
-  const {
-    getInputProps: getPriceInputProps,
-    getIncrementButtonProps: getPriceIncrementProps,
-    getDecrementButtonProps: getPriceDecrementProps,
-  } = useNumberInput({
-    step: 0.01,
-    defaultValue: parseFloat(priceInput) || 0,
-    min: 0,
-    precision: 2,
-    onChange: (valueString) => onPriceChange(valueString),
-  })
+  const handleAmountDelta = (delta: number) => {
+    const next = Math.max(1, amountValue + delta)
+    onAmountChange(String(next))
+  }
 
-  const amountInc = getAmountIncrementProps()
-  const amountDec = getAmountDecrementProps()
-  const amountInputProps = getAmountInputProps()
-
-  const priceInc = getPriceIncrementProps()
-  const priceDec = getPriceDecrementProps()
-  const priceInputProps = getPriceInputProps()
+  const handlePriceDelta = (delta: number) => {
+    const next = Math.max(0, priceValue + delta)
+    const rounded = Math.round(next * 100) / 100
+    onPriceChange(rounded.toFixed(2))
+  }
 
   return (
     <Grid
@@ -109,67 +89,82 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
       borderRadius="lg"
       p={4}
     >
-      {/* Mobile Layout */}
-      <VStack
-        spacing={2}
-        display={['flex', 'flex', 'none']}
-        width="100%"
-      >
-        <HStack width="100%" spacing={4}>
-          <HStack maxW='120px'>
-            <Button {...amountDec} size="xs">-</Button>
-            <Input {...amountInputProps} onBlur={onAmountBlur} size="sm" width="40px" textAlign="center" />
-            <Button {...amountInc} size="xs">+</Button>
+      {/* Mobile Layout - Card style to match desired design */}
+      <VStack spacing={2} display={['flex', 'flex', 'none']} width="100%" align="stretch">
+        <HStack alignItems="center" justifyContent="space-between">
+          <HStack alignItems="center" spacing={3} flex={1}>
+            <Checkbox
+              isChecked={item.purchased}
+              onChange={(e) => onUpdate(item.id, { purchased: e.target.checked })}
+              isDisabled={userPermission === 'viewer'}
+            />
+            <VStack align="stretch" spacing={1} flex={1}>
+              <HStack justifyContent="space-between">
+                <Input
+                  value={nameInput}
+                  variant="unstyled"
+                  fontWeight="semibold"
+                  onChange={(e) => onNameChange(e.target.value)}
+                  onBlur={onNameBlur}
+                  isDisabled={userPermission === 'viewer'}
+                  placeholder="Item name"
+                  size="sm"
+                />
+                <Text fontSize="sm" fontWeight="bold" color="green.500">${totalValue}</Text>
+              </HStack>
+              <Input
+                value={storeInput}
+                variant="unstyled"
+                onChange={(e) => onStoreChange(e.target.value)}
+                onBlur={onStoreBlur}
+                isDisabled={userPermission === 'viewer'}
+                placeholder="Store"
+                size="sm"
+                color="gray.500"
+              />
+              <HStack spacing={2}>
+                <Button size="xs" px={2} onClick={() => handleAmountDelta(-1)}>-</Button>
+                <Input
+                  value={amountInput}
+                  onChange={(e) => onAmountChange(e.target.value)}
+                  onBlur={onAmountBlur}
+                  isDisabled={userPermission === 'viewer'}
+                  variant="unstyled"
+                  size="sm"
+                  width="24px"
+                  textAlign="center"
+                  inputMode="numeric"
+                  placeholder="1"
+                />
+                <Button size="xs" px={2} onClick={() => handleAmountDelta(1)}>+</Button>
+                <Text color="gray.500" fontSize="sm">×</Text>
+                <Text color="gray.500" fontSize="sm">$</Text>
+                <Button size="xs" px={2} onClick={() => handlePriceDelta(-0.01)}>-</Button>
+                <Input
+                  value={priceInput}
+                  onChange={(e) => onPriceChange(e.target.value)}
+                  onBlur={onPriceBlur}
+                  isDisabled={userPermission === 'viewer'}
+                  variant="unstyled"
+                  size="sm"
+                  width="36px"
+                  textAlign="center"
+                  inputMode="decimal"
+                  placeholder="0.00"
+                />
+                <Button size="xs" px={2} onClick={() => handlePriceDelta(0.01)}>+</Button>
+              </HStack>
+            </VStack>
           </HStack>
-          <Input
-            value={nameInput}
-            variant='flushed'
-            onChange={(e) => onNameChange(e.target.value)}
-            onBlur={onNameBlur}
-            isDisabled={userPermission === 'viewer'}
-            placeholder="Item name"
-            size="sm"
-            flex={1}
-          />
-        </HStack>
-        <HStack width="100%" justifyContent="space-between" alignItems="center">
-          <Checkbox
-            isChecked={item.purchased}
-            onChange={(e) => onUpdate(item.id, { purchased: e.target.checked })}
-            isDisabled={userPermission === 'viewer'}
-          />
-          <Input
-            value={storeInput}
-            variant='flushed'
-            onChange={(e) => onStoreChange(e.target.value)}
-            onBlur={onStoreBlur}
-            placeholder="Store"
-            isDisabled={userPermission === 'viewer'}
-            size="sm"
-            flex={1}
-            mx={2}
-          />
           {userPermission !== 'viewer' && (
             <IconButton
               aria-label="Remove item"
               icon={<DeleteIcon />}
               onClick={() => onRemove(item.id)}
               size="sm"
+              alignSelf="center"
             />
           )}
-        </HStack>
-        <HStack width="100%" justifyContent="space-between" alignItems="center">
-          <HStack spacing={2}>
-            <Button {...priceDec} size="xs">-</Button>
-            <InputGroup size="sm">
-              <InputLeftAddon children="$" />
-              <Input {...priceInputProps} onBlur={onPriceBlur} size="sm" width="60px" textAlign="center" />
-            </InputGroup>
-            <Button {...priceInc} size="xs">+</Button>
-          </HStack>
-          <Text fontSize="sm" fontWeight="bold" color="green.500">
-            ${((parseFloat(priceInputProps.value) || 0) * (parseInt(amountInputProps.value) || 1)).toFixed(2)}
-          </Text>
         </HStack>
       </VStack>
 
